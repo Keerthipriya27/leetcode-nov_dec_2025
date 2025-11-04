@@ -1,0 +1,14 @@
+class Solution:
+    def findXSum(self, nums: List[int], k: int, x: int) -> List[int]:
+        n = len(nums)
+        ans = []
+        for i in range(n - k + 1):
+            sub = nums[i:i + k]
+            freq = {}
+            for num in sub:
+                freq[num] = freq.get(num, 0) + 1
+            top_x = sorted(freq.items(), key=lambda p: (p[1], p[0]), reverse=True)[:x]
+            top_elements = {num for num, _ in top_x}
+            sub_sum = sum(num for num in sub if num in top_elements)
+            ans.append(sub_sum)
+        return ans
