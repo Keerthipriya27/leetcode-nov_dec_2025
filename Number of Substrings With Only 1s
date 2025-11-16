@@ -1,0 +1,13 @@
+class Solution:
+    def numSub(self, s: str) -> int:
+        tot, consec = 0, 0
+        length = len(s)
+        for i in range(length):
+            if s[i] == "0":
+                tot += consec * (consec + 1) // 2
+                consec = 0
+            else:
+                consec += 1
+        tot += consec * (consec + 1) // 2
+        tot %= 10**9 + 7
+        return tot
