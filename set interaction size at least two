@@ -1,0 +1,16 @@
+class Solution:
+    def intersectionSizeTwo(self, intervals: List[List[int]]) -> int:
+        intervals.sort(key=lambda x: (x[1], -x[0]))
+        a = b = -1
+        ans = 0
+        for start, end in intervals:
+            count = (a >= start) + (b >= start)
+            if count == 2:
+                continue
+            if count == 1:
+                ans += 1
+                a, b = b, end
+                continue
+            ans += 2
+            a, b = end - 1, end
+        return ans
