@@ -1,0 +1,13 @@
+class Solution:
+    def maxSubarraySum(self, nums: List[int], k: int) -> int:
+        pref = 0
+        INF = 10**30
+        min_pref = [INF] * k
+        min_pref[0] = 0
+        result = -10**30
+        for i, x in enumerate(nums, start=1):
+            pref += x
+            idx = i % k
+            result = max(result, pref - min_pref[idx])
+            min_pref[idx] = min(min_pref[idx], pref)
+        return result
