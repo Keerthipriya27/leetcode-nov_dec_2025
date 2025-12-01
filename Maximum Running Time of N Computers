@@ -1,0 +1,17 @@
+class Solution:
+    def maxRunTime(self, n: int, batteries: List[int]) -> int:
+        batteries.sort()
+        low, high = 0, sum(batteries) // n
+        def can_run(T):
+            total = 0
+            for b in batteries:
+                total += min(b, T)
+            return total >= n * T
+        while low < high:
+            mid = (low + high + 1) // 2
+            if can_run(mid):
+                low = mid
+            else:
+                high = mid - 1
+        return low
+
