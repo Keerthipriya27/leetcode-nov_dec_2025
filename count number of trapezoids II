@@ -1,0 +1,30 @@
+class Solution:
+    def countTrapezoids(self, points: List[List[int]]) -> int:       
+        n = len(points)
+        slope_groups = defaultdict(list)
+        for i in range(n):
+            x1, y1 = points[i]
+            for j in range(i + 1, n):
+                x2, y2 = points[j]
+                dy = y2 - y1
+                dx = x2 - x1
+                g = gcd(dy, dx)
+                dy //= g
+                dx //= g
+                if dx < 0:
+                    dx, dy = -dx, -dy
+                elif dx == 0:
+                    dy = 1
+                slope_groups[(dy, dx)].append((i, j))
+        result = 0
+        for segs in slope_groups.values():
+            m = len(segs)
+            if m < 2:
+                continue           
+            for a in range(m):
+                i1, j1 = segs[a]
+                for b in range(a + 1, m):
+                    i2, j2 = segs[b]
+                    if i1 != i2 and i1 != j2 and j1 != i2 and j1 != j2:
+                        result += 1
+        return result
