@@ -1,0 +1,26 @@
+class Solution:
+    def countCoveredBuildings(self, n: int, buildings: List[List[int]]) -> int:
+        row_minmax = {}
+        col_minmax = {}
+        for x, y in buildings:
+            if x in row_minmax:
+                mn, mx = row_minmax[x]
+                if y < mn: mn = y
+                if y > mx: mx = y
+                row_minmax[x] = (mn, mx)
+            else:
+                row_minmax[x] = (y, y)
+            if y in col_minmax:
+                mn, mx = col_minmax[y]
+                if x < mn: mn = x
+                if x > mx: mx = x
+                col_minmax[y] = (mn, mx)
+            else:
+                col_minmax[y] = (x, x)
+        c = 0
+        for x, y in buildings:
+            rmn, rmx = row_minmax[x]
+            cmn, cmx = col_minmax[y]
+            if rmn < y < rmx and cmn < x < cmx:
+                c += 1
+        return c
