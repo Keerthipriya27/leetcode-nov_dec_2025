@@ -1,0 +1,23 @@
+class Solution:
+    def countMentions(self, numberOfUsers: int, events: List[List[str]]) -> List[int]:
+        mentions = [0] * numberOfUsers
+        offline_until = [0] * numberOfUsers
+        events.sort(key=lambda x: (int(x[1]), 0 if x[0] == "OFFLINE" else 1))
+        for etype, ts, info in events:
+            ts = int(ts)
+            if etype == "OFFLINE":
+                offline_until[int(info)] = ts + 60
+            else:
+                tokens = info.split()
+                if "ALL" in tokens:
+                    for u in range(numberOfUsers):
+                        mentions[u] += 1
+                elif "HERE" in tokens:
+                    for u in range(numberOfUsers):
+                        if ts >= offline_until[u]:
+                            mentions[u] += 1
+                else:
+                    for token in tokens:
+                        if token.startswith("id"):
+                            mentions[int(token[2:])] += 1
+        return mentions
