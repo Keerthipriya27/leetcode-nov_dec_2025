@@ -1,0 +1,12 @@
+class Solution:
+    def validateCoupons(self, code: List[str], businessLine: List[str], isActive: List[bool]) -> List[str]:
+        order = ["electronics", "grocery", "pharmacy", "restaurant"]
+        data = {k: [] for k in order}
+
+        for c, b, a in zip(code, businessLine, isActive):
+            if a and b in data and c and all(ch.isalnum() or ch == "_" for ch in c):
+                data[b].append(c)
+        result = []
+        for k in order:
+            result.extend(sorted(data[k]))
+        return result
