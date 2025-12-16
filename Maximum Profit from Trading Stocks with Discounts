@@ -1,0 +1,40 @@
+class Solution:
+    def maxProfit(self,n: int,present: List[int],future: List[int],hierarchy: List[List[int]],budget: int,) -> int:
+        adj = [[] for _ in range(n)]
+        for x in hierarchy:
+            adj[x[0] - 1].append(x[1] - 1)
+        def traverse(node: int):
+            full_price = present[node]
+            half_price = present[node] // 2
+            no_buy = [0] * (budget + 1)
+            must_buy = [0] * (budget + 1)
+            acc_no = [0] * (budget + 1)
+            acc_yes = [0] * (budget + 1)
+            size_used = full_price
+            for child in adj[node]:
+                c_no, c_yes, child_size = traverse(child)
+                size_used += child_size
+                for total in range(budget, -1, -1):
+                    for take in range(min(child_size, total) + 1):
+                        if total - take >= 0:
+                            acc_no[total] = max(
+                                acc_no[total],
+                                acc_no[total - take] + c_no[take],
+                            )
+                            acc_yes[total] = max(
+                                acc_yes[total],
+                                acc_yes[total - take] + c_yes[take],
+                            )
+            for b in range(budget + 1):
+                no_buy[b] = acc_no[b]
+                must_buy[b] = acc_no[b]
+                if b >= half_price:
+                    must_buy[b] = max(
+                        acc_no[b], acc_yes[b - half_price] + future[node] - half_price
+                    )
+                if b >= full_price:
+                    no_buy[b] = max(
+                        acc_no[b], acc_yes[b - full_price] + future[node] - full_price
+                    )
+            return no_buy, must_buy, size_used
+        return traverse(0)[0][budget]
