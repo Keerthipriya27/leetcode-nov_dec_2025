@@ -1,1 +1,11 @@
-
+class Solution:
+    def maximumProfit(self, prices, k):
+        long = [-10**18] * (k + 1)
+        short = [-10**18] * (k + 1)
+        done = [0] * (k + 1)
+        for price in prices:
+            for t in range(k - 1, -1, -1):
+                long[t] = max(long[t], done[t] - price)
+                short[t] = max(short[t], done[t] + price)
+                done[t + 1] = max(done[t + 1], long[t] + price, short[t] - price)
+        return max(done)
