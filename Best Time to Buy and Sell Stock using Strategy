@@ -1,0 +1,19 @@
+class Solution:
+    def maxProfit(self, prices: List[int], strategy: List[int], k: int) -> int:
+        n = len(prices)
+        half = k // 2
+        A = [strategy[i] * prices[i] for i in range(n)]
+        B = [prices[i] - strategy[i] * prices[i] for i in range(n)]
+        base = sum(A)
+        preA = [0] * (n + 1)
+        preB = [0] * (n + 1)
+        for i in range(n):
+            preA[i + 1] = preA[i] + A[i]
+            preB[i + 1] = preB[i] + B[i]
+        best = 0
+        for l in range(n - k + 1):
+            mid = l + half
+            r = l + k
+            delta = -(preA[mid] - preA[l]) + (preB[r] - preB[mid])
+            best = max(best, delta)
+        return base + best
