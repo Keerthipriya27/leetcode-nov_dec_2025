@@ -1,0 +1,19 @@
+class Solution:
+    def minDeletionSize(self, strs: List[str]) -> int:
+        n = len(strs)
+        m = len(strs[0])
+        fixed = [False] * (n - 1)
+        ans = 0
+        for c in range(m):
+            remove = False
+            for i in range(n - 1):
+                if not fixed[i] and strs[i][c] > strs[i + 1][c]:
+                    remove = True
+                    break
+            if remove:
+                ans += 1
+            else:
+                for i in range(n - 1):
+                    if not fixed[i] and strs[i][c] < strs[i + 1][c]:
+                        fixed[i] = True
+        return ans
